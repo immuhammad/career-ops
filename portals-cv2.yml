@@ -52,6 +52,12 @@ location_filter:
     - "Amsterdam"
     - "London"
     - "United Kingdom"
+    - "Cologne"
+    - "Köln"
+    - "Walldorf"
+    - "Stuttgart"
+    - "Paris"
+    - "Heidelberg"
   # v1 — tune after measuring. UK stays IN at scan (sponsorship is an eval
   # gate, not a scan-time filter); Switzerland/US/India excluded for this
   # mid-level DACH+EU-remote track.
@@ -64,6 +70,10 @@ location_filter:
 
 # Missing salary passes (correct default) — most postings in this track don't
 # publish comp, and a hard drop would lose them.
+# EU Blue Card shortage-occupation threshold (covers mainstream IT/software/
+# data/ML roles) -- verified July 2026, see career-ops-handoff.md section 4
+# ("Visa / Work-Rights Facts"). Re-verify before relying on this figure in
+# any actual application or decision -- it is not re-checked by this file.
 salary_filter:
   min: 45934
   max: 0
