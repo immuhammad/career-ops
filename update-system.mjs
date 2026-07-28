@@ -352,6 +352,7 @@ const USER_PATHS = [
   'modes/_custom.md',
   'voice-dna.md',
   'portals.yml',
+  'portals-cv1.yml',
   'article-digest.md',
   'interview-prep/',
   'data/',
