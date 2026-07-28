@@ -356,6 +356,7 @@ const USER_PATHS = [
   // in this fork; preserved across upstream merges by git; this repo never
   // runs update-system apply -- see merge policy
   'portals-cv1.yml',
+  'portals-cv2.yml',
   'portals-cv3.yml',
   'article-digest.md',
   'interview-prep/',
