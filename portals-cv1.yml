@@ -18,6 +18,9 @@ title_filter:
     - "Intern"
     - "Internship"
     - "Trainee"
+    - "Thesis"
+    - "Diplomarbeit"
+    - "Abschlussarbeit"
   negative:
     - "Senior"
     - "Staff"
@@ -65,6 +68,13 @@ location_filter:
     - "Hamburg"
     - "Frankfurt"
     - "Stuttgart"
+    - "Cologne"
+    - "Köln"
+    - "Walldorf"
+    - "Villach"
+    - "Pasching"
+    - "Zurich"
+    - "Zürich"
     - "Remote"
   # Empty for v1 — measure first before adding blocks.
   block: []
