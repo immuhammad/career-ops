@@ -51,6 +51,15 @@ location_filter:
     - "Netherlands"
     - "United Kingdom"
     - "Worldwide"
+    - "Latvia"
+    - "Poland"
+    - "Belgium"
+    - "Amsterdam"
+    - "Groningen"
+    - "London"
+    - "Bristol"
+    - "Stafford"
+    - "Shrewsbury"
   # Empty for v1 — measure first before adding blocks.
   block: []
 
