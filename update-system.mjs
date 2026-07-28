@@ -352,6 +352,10 @@ const USER_PATHS = [
   'modes/_custom.md',
   'voice-dna.md',
   'portals.yml',
+  // fork patch (immuhammad/career-ops): portals-cv*.yml are tracked user-config
+  // in this fork; preserved across upstream merges by git; this repo never
+  // runs update-system apply -- see merge policy
+  'portals-cv1.yml',
   'article-digest.md',
   'interview-prep/',
   'data/',
