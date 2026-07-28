@@ -1,0 +1,239 @@
+# portals-cv2.yml — Track 2: mid-level AI Application / FDE / Solutions,
+# DACH + EU-remote.
+#
+# Selected at scan time via CAREER_OPS_PORTALS=portals-cv2.yml (see
+# fork issue #2 for the full spec/plan this file implements).
+#
+# Public targeting keywords + public company info only — no personal data.
+# This file IS tracked in the fork (public repo).
+
+title_filter:
+  positive:
+    - "AI Engineer"
+    - "AI Application"
+    - "Applied AI"
+    - "Forward Deployed"
+    - "Solutions Engineer"
+    - "AI Solutions"
+    - "LLM"
+    - "GenAI"
+    - "Machine Learning Engineer"
+    - "ML Engineer"
+    - "Senior AI"
+  negative:
+    - "Intern"
+    - "Internship"
+    - "Werkstudent"
+    - "Praktikum"
+    - "Research Scientist"
+    - "Staff"
+    - "Principal"
+    - "Director"
+    - "Head of"
+    - "PhD"
+    - "Professor"
+
+location_filter:
+  allow:
+    - "Austria"
+    - "Germany"
+    - "Netherlands"
+    - "Remote"
+    - "EU"
+    - "Europe"
+    - "Wien"
+    - "Vienna"
+    - "Linz"
+    - "München"
+    - "Munich"
+    - "Berlin"
+    - "Hamburg"
+    - "Frankfurt"
+    - "Amsterdam"
+    - "London"
+    - "United Kingdom"
+  # v1 — tune after measuring. UK stays IN at scan (sponsorship is an eval
+  # gate, not a scan-time filter); Switzerland/US/India excluded for this
+  # mid-level DACH+EU-remote track.
+  block:
+    - "Switzerland"
+    - "Zürich"
+    - "Zurich"
+    - "United States"
+    - "India"
+
+# Missing salary passes (correct default) — most postings in this track don't
+# publish comp, and a hard drop would lose them.
+salary_filter:
+  min: 45934
+  max: 0
+  currency: "EUR"
+
+# Drop only explicit no-sponsorship postings; don't require a mention (most
+# postings say nothing either way).
+visa_filter:
+  enabled: true
+  require_mention: false
+
+max_posting_age_days: 45
+
+trust_filter:
+  enabled: true
+
+search_queries:
+  - name: Greenhouse — Forward Deployed / AI Engineer DACH
+    query: 'site:job-boards.greenhouse.io "Forward Deployed" OR "AI Engineer" OR "Applied AI" Germany OR Austria OR DACH OR Berlin OR Munich'
+    enabled: true
+
+  - name: Lever — Forward Deployed / AI Engineer DACH
+    query: 'site:jobs.lever.co "Forward Deployed" OR "AI Engineer" OR "Applied AI" Germany OR Austria OR DACH OR Berlin OR Munich'
+    enabled: true
+
+  - name: Ashby — Forward Deployed / AI Engineer DACH
+    query: 'site:jobs.ashbyhq.com "Forward Deployed" OR "AI Engineer" OR "Applied AI" Germany OR Austria OR DACH OR Berlin OR Munich'
+    enabled: true
+
+  - name: Greenhouse/Ashby/Lever — Solutions Engineer AI DACH
+    query: 'site:job-boards.greenhouse.io OR site:jobs.ashbyhq.com OR site:jobs.lever.co "Solutions Engineer" AI Germany OR Austria OR Berlin OR Munich OR Amsterdam remote'
+    enabled: true
+
+# -- Tracked companies --
+# Every careers_url/api/provider slug below was live-verified (HTTP 200
+# against the actual API/board, not guessed from memory) before being added.
+# Companies shared with portals-cv1.yml (Aleph Alpha, DeepL, Celonis,
+# Dynatrace, SAP, Siemens, Bosch, Zalando) reuse the same verified
+# careers_url/provider/api — only the track-specific framing in notes differs.
+tracked_companies:
+  - name: Amazon / AWS — Solutions Engineer Berlin
+    provider: amazon
+    amazon:
+      base_query: "solutions engineer"
+      loc_query: "Berlin"
+    notes: "Global amazon.jobs board narrowed with a Solutions Engineer keyword + Berlin location signal (recall-first — scan.mjs's own title/location filters do the real gating). Verified live (153 hits for this query)."
+    enabled: true
+
+  - name: Google — Munich
+    careers_url: "https://www.google.com/about/careers/applications/jobs/results/?company=Google&company=YouTube&employment_type=FULL_TIME&location=Munich%2C%20Germany&sort_by=relevance"
+    scan_method: websearch
+    scan_query: 'site:google.com/about/careers/applications "AI" OR "Machine Learning" OR "Solutions" Munich'
+    notes: "Custom platform, no ATS API. Live-verified filter URL confirmed 24 full-time Munich roles at verification time incl. AI/ML and Customer Engineer (Solutions-shaped) postings."
+    enabled: true
+
+  - name: Microsoft — Germany
+    careers_url: "https://apply.careers.microsoft.com/careers?location=Germany&sort_by=distance"
+    scan_method: websearch
+    scan_query: 'site:careers.microsoft.com "AI" OR "Solution Engineer" OR "Solutions Architect" Germany'
+    notes: "Custom platform, no ATS API. Live-verified: 11 Germany roles at verification time incl. Azure AI Services and Solution Engineer/Architect postings. Note: the commonly-referenced lc=Germany URL param is silently dropped by a redirect — this URL was reconstructed through the live UI to confirm it actually filters."
+    enabled: true
+
+  - name: Apple — Germany
+    careers_url: "https://jobs.apple.com/en-us/search?location=germany-DEU"
+    scan_method: websearch
+    scan_query: 'site:jobs.apple.com "Machine Learning" OR "AI" Germany'
+    notes: "Custom platform, no ATS API. Live-verified: 75 results at verification time incl. Machine Learning Researcher (Munich) and AIML Applied Research Engineer (Aachen)."
+    enabled: true
+
+  - name: Meta — Germany
+    careers_url: "https://www.metacareers.com/jobsearch/?q=Germany"
+    scan_method: websearch
+    scan_query: 'site:metacareers.com "AI" OR "Machine Learning" OR "Solutions" Germany'
+    notes: "Custom platform, no ATS API. q=Germany is a keyword match, not a strict location facet (per-office offices[] filters returned worse results at verification time) — kept as the best available, inventory was thin/non-AI-shaped at verification time."
+    enabled: true
+
+  # -- DACH/EU AI companies (new for Track 2) --
+
+  - name: Parloa
+    careers_url: https://www.parloa.com/careers/
+    api: https://boards-api.greenhouse.io/v1/boards/parloa/jobs
+    notes: "Berlin DE. Conversational AI. Greenhouse (EU board), slug verified live (200 OK); confirmed current Forward Deployed Engineer / Agent Architect postings (skews senior)."
+    enabled: true
+
+  - name: deepset
+    careers_url: https://jobs.ashbyhq.com/deepsetai
+    notes: "Berlin DE. Open-source NLP / Haystack. Ashby, auto-detected; slug verified live (200 OK). Legacy Personio-hosted board is stale/superseded by this one."
+    enabled: true
+
+  - name: Mistral AI
+    careers_url: https://jobs.ashbyhq.com/mistral.ai
+    notes: "Paris FR. Frontier LLM lab. Ashby, auto-detected; slug verified live (200 OK); confirmed current non-senior Applied AI / Forward Deployed ML Engineer postings across EMEA."
+    enabled: true
+
+  - name: Hugging Face
+    careers_url: https://apply.workable.com/huggingface
+    notes: "NYC US / Paris FR. ML platform. Workable, auto-detected; feed verified live (200 OK); confirmed current non-senior Open-Source Machine Learning Engineer posting (EMEA & US remote)."
+    enabled: true
+
+  - name: n8n
+    careers_url: https://jobs.ashbyhq.com/n8n
+    notes: "Berlin DE. Workflow automation. Ashby, auto-detected; slug verified live (200 OK); current AI Engineer / Forward Deployment / Solutions Engineering postings skew senior/lead."
+    enabled: true
+
+  - name: Personio
+    careers_url: https://personio.jobs.personio.de
+    notes: "Munich DE. HR software (self-hosted on their own Personio ATS product). Auto-detected via <slug>.jobs.personio.de; feed verified live (200 OK). Only 1 open role at verification time, not AI/ML-titled — kept for recurring scans."
+    enabled: true
+
+  - name: Helsing
+    careers_url: https://helsing.ai/careers
+    api: https://boards-api.greenhouse.io/v1/boards/helsing/jobs
+    notes: "Munich DE. Defense AI. Greenhouse, slug verified live (200 OK); confirmed current non-senior AI Research Engineer / Deployed AI Engineer postings (Berlin/Munich/other EU cities)."
+    enabled: true
+
+  - name: Black Forest Labs
+    careers_url: https://job-boards.greenhouse.io/blackforestlabs
+    api: https://boards-api.greenhouse.io/v1/boards/blackforestlabs/jobs
+    notes: "Frontier image/video generation model lab. Greenhouse, slug re-verified live (200 OK). Reused from templates/portals.example.yml."
+    enabled: true
+
+  # -- Shared with portals-cv1.yml (same verified careers_url/provider/api) --
+
+  - name: Aleph Alpha
+    careers_url: https://jobs.ashbyhq.com/AlephAlpha
+    notes: "Heidelberg DE. Sovereign European LLM provider, enterprise & government focus. Ashby, auto-detected."
+    enabled: true
+
+  - name: DeepL
+    careers_url: https://jobs.ashbyhq.com/DeepL
+    notes: "Cologne DE. Translation & language AI. Ashby, auto-detected."
+    enabled: true
+
+  - name: Celonis
+    careers_url: https://job-boards.greenhouse.io/celonis
+    api: https://boards-api.greenhouse.io/v1/boards/celonis/jobs
+    notes: "Munich DE / NYC. Process intelligence, Applied AI Engineer roles."
+    enabled: true
+
+  - name: Dynatrace
+    careers_url: https://www.dynatrace.com/careers/jobs/
+    provider: smartrecruiters
+    api: https://jobs.smartrecruiters.com/Dynatrace1
+    notes: "Linz AT. Observability platform. SmartRecruiters slug Dynatrace1."
+    enabled: true
+
+  - name: SAP
+    careers_url: https://jobs.sap.com
+    provider: successfactors
+    api: https://jobs.sap.com
+    notes: "Walldorf DE. SAP SuccessFactors (SAP's own product)."
+    enabled: true
+
+  - name: Siemens
+    careers_url: https://jobs.siemens.com/en_US/externaljobs/SearchJobs
+    scan_method: websearch
+    scan_query: 'site:jobs.siemens.com "AI Engineer" OR "Solutions Engineer" OR "Forward Deployed"'
+    notes: "Munich DE. No ATS vendor confirmed from page source (client-rendered search) — websearch handoff."
+    enabled: true
+
+  - name: Bosch
+    careers_url: https://www.bosch.de/karriere/
+    provider: smartrecruiters
+    api: https://jobs.smartrecruiters.com/BoschGroup
+    notes: "Stuttgart DE. SmartRecruiters slug BoschGroup."
+    enabled: true
+
+  - name: Zalando
+    careers_url: https://jobs.zalando.com/en/jobs
+    scan_method: websearch
+    scan_query: 'site:jobs.zalando.com "AI Engineer" OR "Solutions Engineer" OR "Machine Learning"'
+    notes: "Berlin DE. Legacy Greenhouse board now 404s; current ATS vendor unconfirmed — websearch handoff."
+    enabled: true
