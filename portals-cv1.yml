@@ -1,0 +1,317 @@
+# portals-cv1.yml — Track 1: Werkstudent (AT) + Praktikum/internships (AT+DE+EU)
+#
+# Selected at scan time via CAREER_OPS_PORTALS=portals-cv1.yml (see
+# fork issue #1 for the full spec/plan this file implements).
+#
+# Public targeting keywords + public company info only — no personal data.
+# This file IS tracked in the fork (public repo).
+
+title_filter:
+  # German AND English student-role terms. Title match is substring-OR;
+  # domain narrowing (AI/ML/Data/Software) happens in content_filter below,
+  # not here — these terms alone are department-agnostic.
+  positive:
+    - "Werkstudent"
+    - "Working Student"
+    - "Praktikum"
+    - "Praktikant"
+    - "Intern"
+    - "Internship"
+    - "Trainee"
+    - "Thesis"
+    - "Diplomarbeit"
+    - "Abschlussarbeit"
+  negative:
+    - "Senior"
+    - "Staff"
+    - "Principal"
+    - "Lead"
+    - "Head of"
+    - "Director"
+    - "Manager"
+    - "Sales"
+    - "Marketing"
+    - "Recruiting"
+    - "HR"
+    - "Legal"
+
+# Domain narrowing on the job description. All of the title keywords above
+# are department-agnostic (a "Werkstudent" or "Praktikum" posting exists in
+# every department), so this applies globally rather than per-keyword via
+# by_title_keyword — v1 measures the noise level first before tightening
+# further to specific keywords.
+content_filter:
+  positive:
+    - "AI"
+    - "Machine Learning"
+    - "ML"
+    - "Data"
+    - "Software"
+    - "Backend"
+    - "Python"
+    - "LLM"
+
+location_filter:
+  allow:
+    - "Austria"
+    - "Österreich"
+    - "Linz"
+    - "Wien"
+    - "Vienna"
+    - "Graz"
+    - "Salzburg"
+    - "Germany"
+    - "Deutschland"
+    - "München"
+    - "Munich"
+    - "Berlin"
+    - "Hamburg"
+    - "Frankfurt"
+    - "Stuttgart"
+    - "Cologne"
+    - "Köln"
+    - "Walldorf"
+    - "Villach"
+    - "Pasching"
+    - "Zurich"
+    - "Zürich"
+    - "Remote"
+  # Empty for v1 — measure first before adding blocks.
+  block: []
+
+# No salary_filter — deliberate. Student-shaped roles rarely publish comp,
+# and a floor would just drop everything.
+
+# Freshness gate — offers older than 45 days are skipped (providers that
+# expose no posting date are never penalized).
+max_posting_age_days: 45
+
+trust_filter:
+  enabled: true
+
+# -- Search queries --
+# Note (from the issue, not enforceable at scan time): German-located roles
+# titled "Werkstudent" are handled at eval, not by a title×location cross-gate
+# here.
+search_queries:
+  - name: karriere.at — Werkstudent AI/Data/Software
+    query: 'site:karriere.at "Werkstudent" AI OR "Machine Learning" OR Data OR Software OR Python OR LLM'
+    enabled: true
+
+  - name: karriere.at — Praktikum AI/Data/Software
+    query: 'site:karriere.at "Praktikum" AI OR "Machine Learning" OR Data OR Software OR Python OR LLM'
+    enabled: true
+
+  - name: Greenhouse — Werkstudent/Praktikum/Intern
+    query: 'site:job-boards.greenhouse.io "Werkstudent" OR "Praktikum" OR "Intern" AI OR "Machine Learning" OR Data OR Software'
+    enabled: true
+
+  - name: Lever — Werkstudent/Praktikum/Intern
+    query: 'site:jobs.lever.co "Werkstudent" OR "Praktikum" OR "Intern" AI OR "Machine Learning" OR Data OR Software'
+    enabled: true
+
+  - name: Ashby — Werkstudent/Praktikum/Intern
+    query: 'site:jobs.ashbyhq.com "Werkstudent" OR "Praktikum" OR "Intern" AI OR "Machine Learning" OR Data OR Software'
+    enabled: true
+
+# -- Tracked companies + job boards --
+# Every careers_url/api/provider slug below was live-verified (HTTP 200 against
+# the actual API/board, not guessed from memory) before being added — see PR
+# body for the verification notes. Aggregator boards (Arbeitnow, Arbeitsagentur,
+# Amazon) are listed here too, not under a separate job_boards key, so they get
+# picked up by validate-portals.mjs and verify-portals.mjs's schema/network checks.
+tracked_companies:
+  # -- Aggregators / job boards (DE/AT + EU coverage) --
+
+  - name: Arbeitnow
+    provider: arbeitnow
+    max_pages: 3
+    notes: "EU/DACH-heavy board aggregator, newest-first."
+    enabled: true
+
+  - name: Arbeitsagentur — Werkstudent/Praktikum Deutschland
+    provider: arbeitsagentur
+    arbeitsagentur:
+      keywords:
+        - "Werkstudent Data"
+        - "Werkstudent KI"
+        - "Werkstudent Softwareentwicklung"
+        - "Praktikum Data Science"
+      days: 30
+      size: 100
+    notes: "German federal jobs API (Bundesagentur für Arbeit). Germany-only by nature; Austria coverage comes from karriere.at/tracked companies instead. Each keyword verified live (6-60 hits) before inclusion."
+    enabled: true
+
+  - name: Amazon / AWS — Student Programs Germany
+    provider: amazon
+    amazon:
+      base_query: "student"
+      loc_query: "Germany"
+    notes: "Global amazon.jobs board narrowed with a student keyword + Germany location signal (recall-first — scan.mjs's own title/location filters do the real gating). Verified live: surfaces real 'Working Student' Berlin postings."
+    enabled: true
+
+  # -- Big-tech EU/DACH intern & student programs (no ATS API — websearch handoff) --
+
+  - name: Google — Students & Graduates
+    careers_url: https://www.google.com/about/careers/applications/students/
+    scan_method: websearch
+    scan_query: 'site:google.com/about/careers/applications intern OR apprentice Germany OR Austria OR Munich OR Zurich'
+    notes: "Custom platform, no ATS API. Live-verified filter URL: google.com/about/careers/applications/jobs/results/?location=Germany&target_level=INTERN_AND_APPRENTICE (0 DE/AT hits at verification time, but EU apprenticeships exist — kept for recurring scans)."
+    enabled: true
+
+  - name: Microsoft — Students
+    careers_url: https://careers.microsoft.com/v2/global/en/students
+    scan_method: websearch
+    scan_query: 'site:careers.microsoft.com intern Germany OR Austria'
+    notes: "Custom platform, no ATS API. Live-verified filter: apply.careers.microsoft.com/careers?location=Germany&filter_seniority=Intern (0 hits at verification time — kept for recurring scans)."
+    enabled: true
+
+  - name: Apple — Students
+    careers_url: https://www.apple.com/careers/uk/work-at-apple/students.html
+    scan_method: websearch
+    scan_query: 'site:jobs.apple.com internship Germany OR Munich'
+    notes: "Custom platform, no ATS API. Live-verified filter: jobs.apple.com/en-us/search?location=germany-DEU&team=internships-STDNT-INTRN — 3 live Munich internships at verification time."
+    enabled: true
+
+  - name: Meta — University / Early Careers
+    careers_url: https://www.metacareers.com/careerprograms/students/
+    scan_method: websearch
+    scan_query: 'site:metacareers.com intern OR university Germany OR Ireland OR Dublin'
+    notes: "Custom platform, no ATS API. Meta University itself is US/Canada/Mexico-only per Meta's own page copy; EU inventory is thin/seasonal — kept for recurring scans, Dublin office is the nearest EU hub."
+    enabled: true
+
+  # -- Austria seed companies --
+
+  - name: Dynatrace
+    careers_url: https://www.dynatrace.com/careers/jobs/
+    provider: smartrecruiters
+    api: https://jobs.smartrecruiters.com/Dynatrace1
+    notes: "Linz AT. Observability platform. SmartRecruiters slug Dynatrace1 verified live (200 OK); confirmed current Summer Internship 2026 postings."
+    enabled: true
+
+  - name: Cloudflight
+    careers_url: https://career.cloudflight.io/
+    api: https://cloudflight.wd103.myworkdayjobs.com/en-GB/external_career_site
+    notes: "Linz AT. Digital consulting/software engineering. Branded page redirects to this Workday tenant; CXS endpoint verified live (200 OK)."
+    enabled: true
+
+  - name: Netconomy
+    careers_url: https://netconomy.recruitee.com
+    notes: "Graz AT. Commerce/digital consultancy. Recruitee tenant verified live (200 OK); branded listing at netconomy.net/careers/job-openings/. Confirmed current Working Student posting."
+    enabled: true
+
+  - name: Tractive
+    careers_url: https://tractive.com/en/hr/careers
+    scan_method: websearch
+    scan_query: 'site:tractivegmbh.teamtailor.com Werkstudent OR Praktikum OR Intern'
+    notes: "Pasching AT. Pet GPS tracking. TeamTailor board — no built-in provider, websearch handoff."
+    enabled: true
+
+  - name: KEBA
+    careers_url: https://www.keba.com/en/corporate/career/job-openings
+    scan_method: websearch
+    scan_query: 'site:jobs.keba.com Praktikum OR Werkstudent OR Diplomarbeit'
+    notes: "Linz AT. Industrial automation. In-house ATS, no vendor identified — websearch handoff. Confirmed live Praktikum/thesis postings exist."
+    enabled: true
+
+  - name: Fabasoft
+    careers_url: https://www.fabasoft.com/en/career/jobs
+    scan_method: websearch
+    scan_query: 'site:fabasoft.com/en/career Werkstudent OR Praktikum OR "Work-Study"'
+    notes: "Linz AT. Software/cloud/BPM. In-house ATS (explicitly no third-party vendor per their own FAQ) — websearch handoff. Confirmed live Work-Study Program category."
+    enabled: true
+
+  - name: Infineon
+    careers_url: https://jobs.infineon.com/careers
+    scan_method: websearch
+    scan_query: 'site:jobs.infineon.com Werkstudent OR Praktikum Villach OR Austria OR Deutschland'
+    notes: "Villach AT / Germany. Semiconductors. Eightfold AI platform — no built-in provider, websearch handoff. Confirmed live Werkstudent postings."
+    enabled: true
+
+  - name: AVL
+    careers_url: https://jobs.avl.com/viewalljobs/
+    provider: successfactors
+    api: https://jobs.avl.com
+    notes: "Graz AT. Automotive powertrain/simulation. SAP SuccessFactors, RMK endpoint verified live (200 OK); Student/Internship/Thesis filter category confirmed."
+    enabled: true
+
+  - name: Bitpanda
+    careers_url: https://www.bitpanda.com/en/career
+    api: https://boards-api.greenhouse.io/v1/boards/bitpanda/jobs
+    notes: "Vienna AT. Crypto/investing platform. Greenhouse (EU board), slug verified live (200 OK); confirmed current 12-month internship posting."
+    enabled: true
+
+  - name: GoStudent
+    careers_url: https://www.gostudent.org/en-gb/all-jobs/
+    scan_method: websearch
+    scan_query: 'site:gostudent.org/en-gb/all-jobs Werkstudent OR Praktikum OR Intern'
+    notes: "Vienna AT. EdTech/tutoring. JS-rendered board, no ATS fingerprint found — websearch handoff."
+    enabled: true
+
+  - name: TourRadar
+    careers_url: https://www.tourradar.com/careers
+    scan_method: websearch
+    scan_query: 'site:tourradar.talentlyft.com Werkstudent OR Praktikum OR Intern'
+    notes: "Vienna AT. Travel booking platform. TalentLyft board — no built-in provider, websearch handoff."
+    enabled: true
+
+  # -- Germany seed companies --
+
+  - name: SAP — Students & Graduates
+    careers_url: https://jobs.sap.com/content/Students-and-Graduates/
+    provider: successfactors
+    api: https://jobs.sap.com
+    notes: "Walldorf DE. SAP SuccessFactors (SAP's own product), RMK endpoint verified live (200 OK); confirmed Working Student/Intern postings in Walldorf/Berlin/Bonn and Austria."
+    enabled: true
+
+  - name: Siemens
+    careers_url: https://jobs.siemens.com/en_US/externaljobs/SearchJobs
+    scan_method: websearch
+    scan_query: 'site:jobs.siemens.com Werkstudent OR Praktikum'
+    notes: "Munich DE. No ATS vendor confirmed from page source (client-rendered search) — websearch handoff. Board confirmed live with active Intern postings."
+    enabled: true
+
+  - name: Bosch
+    careers_url: https://www.bosch.de/karriere/dein-einstieg/studentinnen-und-studenten/
+    provider: smartrecruiters
+    api: https://jobs.smartrecruiters.com/BoschGroup
+    notes: "Stuttgart DE. SmartRecruiters slug BoschGroup verified live (200 OK); confirmed current Werkstudent postings (lab, HR, IT, comms)."
+    enabled: true
+
+  - name: Zalando
+    careers_url: https://jobs.zalando.com/en/what-we-do/early-careers
+    scan_method: websearch
+    scan_query: 'site:jobs.zalando.com Werkstudent OR Praktikum OR Internship'
+    notes: "Berlin DE. Legacy Greenhouse board now 404s; current ATS vendor unconfirmed — websearch handoff. Early-careers program confirmed active."
+    enabled: true
+
+  - name: Delivery Hero
+    careers_url: https://careers.deliveryhero.com/jobs
+    provider: smartrecruiters
+    api: https://careers.smartrecruiters.com/DeliveryHero
+    notes: "Berlin DE. Global/corporate site. SmartRecruiters slug DeliveryHero verified live (200 OK); confirmed current Intern, Candidate Experience posting."
+    enabled: true
+
+  # -- DACH AI labs & frontier model providers (reused from templates/portals.example.yml) --
+
+  - name: Celonis
+    careers_url: https://job-boards.greenhouse.io/celonis
+    api: https://boards-api.greenhouse.io/v1/boards/celonis/jobs
+    notes: "Munich DE / NYC. Process intelligence, Applied AI Engineer roles."
+    enabled: true
+
+  - name: DeepL
+    careers_url: https://jobs.ashbyhq.com/DeepL
+    notes: "Cologne DE. Translation & language AI. Ashby, auto-detected from careers_url."
+    enabled: true
+
+  - name: Aleph Alpha
+    careers_url: https://jobs.ashbyhq.com/AlephAlpha
+    notes: "Heidelberg DE. Sovereign European LLM provider, enterprise & government focus. Ashby, auto-detected from careers_url."
+    enabled: true
+
+  - name: JetBrains
+    careers_url: https://www.jetbrains.com/careers/jobs/
+    api: https://boards-api.greenhouse.io/v1/boards/jetbrains/jobs
+    notes: "EU boards (Prague/Munich). Dev tools. Greenhouse, slug verified live (200 OK). No formal internship category (Campus Ambassador only) — kept for AI/ML student-shaped postings if listed."
+    enabled: true

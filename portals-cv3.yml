@@ -1,0 +1,206 @@
+# portals-cv3.yml — Track 3: senior Magento / Adobe Commerce / Laravel / PHP,
+# English-speaking, EU-remote-friendly.
+#
+# Selected at scan time via CAREER_OPS_PORTALS=portals-cv3.yml (see
+# fork issue #3 for the full spec/plan this file implements).
+#
+# Public targeting keywords + public company info only — no personal data.
+# This file IS tracked in the fork (public repo).
+
+title_filter:
+  # "Backend Engineer" is deliberately broad (measure first, per the issue) —
+  # content_filter.by_title_keyword below narrows it to commerce-shaped roles
+  # so it doesn't flood with unrelated backend postings.
+  positive:
+    - "Magento"
+    - "Adobe Commerce"
+    - "Laravel"
+    - "PHP"
+    - "E-commerce Backend"
+    - "eCommerce Backend"
+    - "Shopify Backend"
+    - "Shopify App"
+    - "Backend Engineer"
+  negative:
+    - "Junior"
+    - "Intern"
+    - "Werkstudent"
+    - "Praktikum"
+    - "WordPress"
+    - "Frontend"
+    - "Designer"
+    - "Trainee"
+
+content_filter:
+  by_title_keyword:
+    "Backend Engineer":
+      positive:
+        - "Magento"
+        - "Adobe Commerce"
+        - "Laravel"
+        - "PHP"
+        - "e-commerce"
+
+location_filter:
+  allow:
+    - "Remote"
+    - "EU"
+    - "Europe"
+    - "Austria"
+    - "Germany"
+    - "Netherlands"
+    - "United Kingdom"
+    - "Worldwide"
+    - "Latvia"
+    - "Poland"
+    - "Belgium"
+    - "Amsterdam"
+    - "Groningen"
+    - "London"
+    - "Bristol"
+    - "Stafford"
+    - "Shrewsbury"
+  # Empty for v1 — measure first before adding blocks.
+  block: []
+
+# Ahmad's own stated income floor for this track (senior Magento/Laravel),
+# not a government-regulated threshold like CV-1/CV-2's visa-linked figures
+# — see .harness/handoff.md's decisions log. Re-confirm with Ahmad before
+# relying on this number in any actual application decision. Missing salary
+# passes (correct default) — agencies often don't list comp.
+salary_filter:
+  min: 50000
+  max: 0
+  currency: "EUR"
+
+max_posting_age_days: 45
+
+trust_filter:
+  enabled: true
+
+search_queries:
+  - name: Greenhouse — Magento/Adobe Commerce/Laravel senior
+    query: 'site:job-boards.greenhouse.io "Magento" OR "Adobe Commerce" OR "Laravel" senior OR lead PHP'
+    enabled: true
+
+  - name: Lever — Magento/Adobe Commerce/Laravel senior
+    query: 'site:jobs.lever.co "Magento" OR "Adobe Commerce" OR "Laravel" senior OR lead PHP'
+    enabled: true
+
+  - name: Ashby — Magento/Adobe Commerce/Laravel senior
+    query: 'site:jobs.ashbyhq.com "Magento" OR "Adobe Commerce" OR "Laravel" senior OR lead PHP'
+    enabled: true
+
+# -- Tracked companies --
+# Every careers_url below was live-verified (HTTP 200 + real listing content,
+# not guessed from memory) before being added. Almost none of these agencies
+# run a zero-token-provider-supported ATS (custom sites, TeamTailor, or a
+# Recruitee instance on a BRANDED domain that providers/recruitee.mjs's strict
+# <slug>.recruitee.com hostname match doesn't cover) — confirmed by reading
+# the provider source, not assumed — so this track leans on Arbeitnow (a real
+# zero-token board) plus websearch handoff for the rest, per the issue's own
+# "arbeitnow provider entry" hint under Sources.
+tracked_companies:
+  - name: Arbeitnow
+    provider: arbeitnow
+    max_pages: 3
+    notes: "EU/DACH-heavy board aggregator, newest-first — the one real zero-token source for this track's smaller agency postings."
+    enabled: true
+
+  - name: Vaimo
+    careers_url: https://careers.vaimo.com/jobs
+    scan_method: websearch
+    scan_query: 'site:careers.vaimo.com "PHP Engineer" OR "Magento" OR "Adobe Commerce"'
+    notes: "Adobe Commerce/Magento Gold Solution Partner (global, HQ Sweden). TeamTailor — no built-in provider, websearch handoff. Confirmed live PHP Engineer postings at verification time (Pretoria SA office, not EU — kept for recurring scans in case EU roles open)."
+    enabled: true
+
+  - name: space48 (now Glass Atlas)
+    careers_url: https://careers.glassatlas.com/jobs
+    scan_method: websearch
+    scan_query: 'site:careers.glassatlas.com "PHP" OR "Magento" OR "Adobe Commerce" developer'
+    notes: "UK Adobe Commerce/Magento agency, rebranded to Glass Atlas in 2025 (Dark Matter Commerce group). TeamTailor — no built-in provider, websearch handoff. No dev/PHP roles live at verification time (only Paid Social) — kept for recurring scans."
+    enabled: true
+
+  - name: Fisheye (a Youwe company)
+    careers_url: https://careers.youweagency.com/
+    scan_method: websearch
+    scan_query: 'site:careers.youweagency.com "PHP" OR "Magento" OR "Full-Stack" developer'
+    notes: "UK Magento agency (Shrewsbury), acquired by Youwe in 2022. Confirmed live on Recruitee, but on a BRANDED custom domain (careers.youweagency.com) that providers/recruitee.mjs's strict <slug>.recruitee.com hostname match does not cover (verified by reading the provider source: it has no api: override unlike smartrecruiters/successfactors) — websearch handoff. Current board shows a Senior Full-Stack Headless Developer posting (Groningen/Shrewsbury/Kyiv, hybrid), no Magento-titled role at verification time."
+    enabled: true
+
+  - name: Absolute Web
+    careers_url: https://absoluteweb.com/careers/
+    scan_method: websearch
+    scan_query: 'site:absoluteweb.com "Magento" OR "Adobe Commerce" developer'
+    notes: "Custom site (direct fetch blocked by bot protection at verification time; content confirmed indirectly via search-indexed job pages) — websearch handoff. Confirmed live Magento 2 Backend Developer / Ecommerce Solutions Architect postings, but Miami-based, not EU-remote — kept per the issue's explicit seed list, weigh accordingly at eval."
+    enabled: true
+
+  - name: Vendic
+    careers_url: https://vendic.agency/en/jobs
+    scan_method: websearch
+    scan_query: 'site:vendic.agency "PHP" OR "Laravel" OR "Magento" developer'
+    notes: "Netherlands, Hyvä (Magento 2 theme framework) Platinum Partner. Custom site — websearch handoff. Confirmed live Fullstack Developer posting requiring PHP + Symfony/Laravel."
+    enabled: true
+
+  - name: Elgentos
+    careers_url: https://werkenbijelgentos.nl/vacatures/
+    scan_method: websearch
+    scan_query: 'site:werkenbijelgentos.nl "Magento" developer'
+    notes: "Groningen NL, Magento 2 / Hyvä agency. Custom site — websearch handoff. Confirmed live Senior Magento 2 Developer posting."
+    enabled: true
+
+  - name: Magebit
+    careers_url: https://careers.magebit.com/
+    scan_method: websearch
+    scan_query: 'site:careers.magebit.com "Magento" OR "Adobe Commerce" developer'
+    notes: "Latvia, Hyvä-theme specialist. TeamTailor — no built-in provider, websearch handoff. Confirmed live Adobe Commerce/Magento Developer posting, Global/Fully Remote."
+    enabled: true
+
+  - name: Bold Commerce (NL)
+    careers_url: https://www.boldcommerce.nl/vacatures
+    scan_method: websearch
+    scan_query: 'site:boldcommerce.nl "PHP" OR "Magento" developer'
+    notes: "Amsterdam NL. Custom site — websearch handoff. Confirmed live PHP Developer posting for Magento + Symfony, Medior/Senior. Not affiliated with the Shopify-app company of the same name."
+    enabled: true
+
+  - name: iWeb
+    careers_url: https://www.iweb.co.uk/magento-ecommerce-careers/
+    scan_method: websearch
+    scan_query: 'site:iweb.co.uk "Magento" OR "Commerce Engineer" developer'
+    notes: "UK (Bristol/London/Stafford). No ATS at all (direct application by email) — websearch handoff. Confirmed live Senior Commerce Engineer posting, strong PHP, Bristol/Remote-UK."
+    enabled: true
+
+  - name: Scandiweb
+    careers_url: https://www.scandiweb.com/careers/
+    scan_method: websearch
+    scan_query: 'site:scandiweb.com "Magento" OR "PHP" developer'
+    notes: "Latvia/global, Magento/Adobe Commerce agency. Custom site — websearch handoff. No open PHP/Magento roles at verification time — kept for recurring scans (real, verified career page)."
+    enabled: true
+
+  - name: Snowdog
+    careers_url: https://snow.dog/careers/
+    scan_method: websearch
+    scan_query: 'site:snow.dog "Magento" OR "PHP" developer'
+    notes: "Poland, Magento agency. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page)."
+    enabled: true
+
+  - name: Divante
+    careers_url: https://divante.com/careers/
+    scan_method: websearch
+    scan_query: 'site:divante.com "Magento" OR "PHP" developer'
+    notes: "Poland, e-commerce/Magento agency. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page)."
+    enabled: true
+
+  - name: Spatie
+    careers_url: https://spatie.be/jobs
+    scan_method: websearch
+    scan_query: 'site:spatie.be "Laravel" OR "PHP" developer'
+    notes: "Belgium, Laravel package maintainers / consultancy. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page)."
+    enabled: true
+
+  - name: valantic (formerly Netz98)
+    careers_url: https://www.valantic.com/en/career/
+    scan_method: websearch
+    scan_query: 'site:valantic.com "Magento" OR "Adobe Commerce" developer'
+    notes: "Germany. Netz98 (Magento agency) was acquired by valantic; hiring now runs through valantic's own careers site. No Magento-specific title confirmed live at verification time — kept for recurring scans."
+    enabled: true
