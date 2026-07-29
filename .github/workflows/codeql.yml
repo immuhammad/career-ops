@@ -1,9 +1,13 @@
 name: 'CodeQL Analysis'
+# fork patch (immuhammad/career-ops): career-ops-custom is this fork's working
+# branch under the vendor-branch model (main = pristine upstream mirror) --
+# PRs target career-ops-custom, so the trigger must cover it too. See house
+# rule 12, modes/_custom.md.
 on:
   push:
-    branches: [main]
+    branches: [main, career-ops-custom]
   pull_request:
-    branches: [main]
+    branches: [main, career-ops-custom]
   schedule:
     - cron: '0 4 * * 1' # Weekly Monday 4am UTC
 
