@@ -290,6 +290,37 @@ tracked_companies:
     notes: "Berlin DE. Global/corporate site. SmartRecruiters slug DeliveryHero verified live (200 OK); confirmed current Intern, Candidate Experience posting."
     enabled: true
 
+  # -- Austrian roster expansion (issue #8) --
+
+  - name: Bitmovin
+    careers_url: https://bitmovin.com/careers
+    api: https://boards-api.greenhouse.io/v1/boards/bitmovin/jobs
+    notes: "Vienna/Klagenfurt AT. Video streaming tech, Speedinvest-backed scale-up. Greenhouse, slug verified live (200 OK); confirmed current 'AI Business Internship' (Klagenfurt/Vienna) -- a direct CV-1 fit. English-friendly."
+    enabled: true
+
+  - name: Anyline
+    careers_url: https://anyline-gmbh.jobs.personio.de
+    notes: "Vienna AT. Computer vision/OCR. Personio (auto-detected via <slug>.jobs.personio.de -- the provider only reads careers_url, not api:), verified live (200 OK); branded page at anyline.com/jobs. Thin pipeline right now (1 real req: Cloud Engineer) but kept for recurring scans -- real, funded AT company."
+    enabled: true
+
+  - name: Raiffeisen Bank International (RBI)
+    careers_url: https://jobs.rbinternational.com
+    provider: successfactors
+    api: https://jobs.rbinternational.com
+    notes: "Vienna AT. SAP SuccessFactors, RMK endpoint verified live (200 OK). Confirmed current 'Student Job' IT postings at 20-25h/week (Cloud Enablement Tribe) -- a strong CV-1 hours/fit match. English-friendly."
+    enabled: true
+
+  - name: TeamViewer
+    careers_url: https://careers.teamviewer.com
+    provider: teamtailor
+    notes: "TeamViewer Austria GmbH is registered in Linz (Firmenbuch FN 485795f), not Vienna. Named by Ahmad to assess. TeamTailor branded host, /jobs.rss verified live (200 OK). Zero Austria-tagged roles at verification time (current postings: Clearwater FL/Porto/Germany) -- kept for recurring scans, same 'live but empty' treatment as Dynatrace."
+    enabled: true
+
+  - name: Prewave
+    careers_url: https://prewave.jobs.personio.com
+    notes: "Vienna AT. Supply-chain risk AI. Personio (auto-detected via <slug>.jobs.personio.com -- the provider only reads careers_url, not api:), verified live (200 OK); branded page at prewave.com/company/careers. Confirmed current 'Finance AI Intern' (part-time eligible) -- CV-1 fit; also runs Data Science Engineer / Senior Fullstack roles relevant to CV-2. English-friendly (one role wants German+English)."
+    enabled: true
+
   # -- DACH AI labs & frontier model providers (reused from templates/portals.example.yml) --
 
   - name: Celonis

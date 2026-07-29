@@ -202,3 +202,19 @@ tracked_companies:
     provider: larajobs
     notes: "NEW (issue #7): providers/larajobs.mjs just landed from upstream -- board-wide public RSS feed at larajobs.com/feed (Laravel/PHP jobs), zero-token, no per-tenant config needed. Verified live (200 OK). Adds real zero-token coverage for a track that previously had none."
     enabled: true
+
+  # -- Austrian/DACH roster expansion (issue #8) --
+
+  - name: LimeSoda
+    careers_url: https://www.limesoda.com/karriere
+    scan_method: websearch
+    scan_query: 'site:limesoda.com "PHP" OR "Magento" OR "Adobe Commerce" developer'
+    notes: "Vienna AT. Named by Ahmad to assess. Confirmed genuine Magento/Adobe Commerce practice (their own services page names it alongside Shopware/WooCommerce). onlyfy ATS (limesoda.onlyfy.jobs) -- no built-in provider, websearch handoff. Confirmed current 'PHP Developer Magento/Adobe Commerce' posting; a second PHP Backend-Developer posting looked stale (dated 2024) -- weigh accordingly at eval."
+    enabled: true
+
+  - name: dotSource
+    careers_url: https://www.dotsource.de/karriere/
+    scan_method: websearch
+    scan_query: 'site:dotsource.de "Magento" OR "Adobe Commerce" OR PHP developer'
+    notes: "Jena DE. Adobe Commerce Solution Partner since 2008 (dedicated case-study page, named enterprise clients) -- strong, independently confirmed Magento/Adobe Commerce specialization. Custom TYPO3 site, no third-party ATS -- websearch handoff. No dated individual PHP requisition found at verification time (only a generic developer-jobs category page) -- kept for recurring scans given the confirmed practice area."
+    enabled: true
