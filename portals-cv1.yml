@@ -69,13 +69,34 @@ content_filter:
   # (fires the moment a Lever source is added, or if a websearch-handoff
   # research pass checks the full JD), not an active filter right now. Do not
   # assume it is catching anything yet.
+  #
+  # AMENDMENT (issue #13, Ahmad, after Austria-only narrowing was confirmed):
+  # a bare substring match on a language TERM is not enough -- Austria-only
+  # narrowing makes this gate MORE dangerous, not less, because a large share
+  # of genuinely English-friendly Austrian roles are still ADVERTISED in
+  # German. "Deutschkenntnisse von Vorteil" (German an ADVANTAGE, not
+  # required) must NOT be rejected -- that is exactly the kind of role this
+  # track exists to find. So every keyword below is a REQUIREMENT-qualified
+  # compound phrase, not a bare language term: dropped the bare
+  # "Deutschkenntnisse" and "sehr gute Deutschkenntnisse" forms from the
+  # original seed list, since both are grammatically compatible with a
+  # trailing "von Vorteil"/"wuenschenswert" softener that would flip their
+  # meaning -- keeping them risked exactly the false-positive Ahmad flagged.
+  #
+  # MECHANICAL LIMIT, stated not hidden: content_filter (scan.mjs) is a flat
+  # substring-match list with no proximity/exclusion logic -- it cannot
+  # express "reject on X unless followed by Y" natively. Compound,
+  # requirement-qualified phrasing is the closest available substitute, not
+  # a guarantee: a sufficiently creative JD could still in principle pair one
+  # of these exact compounds with a softener. Residual risk, not eliminated.
   negative:
-    - "Deutschkenntnisse"
+    - "Deutschkenntnisse erforderlich"
+    - "Deutschkenntnisse vorausgesetzt"
+    - "Deutschkenntnisse zwingend"
     - "verhandlungssichere Deutsch"
     - "verhandlungssicheres Deutsch"
     - "fließende Deutsch"
     - "fließendes Deutsch"
-    - "sehr gute Deutschkenntnisse"
     - "Muttersprache Deutsch"
     - "Deutsch auf C1"
     - "Deutsch auf B2"
