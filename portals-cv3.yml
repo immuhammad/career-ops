@@ -109,98 +109,96 @@ tracked_companies:
 
   - name: Vaimo
     careers_url: https://careers.vaimo.com/jobs
-    scan_method: websearch
-    scan_query: 'site:careers.vaimo.com "PHP Engineer" OR "Magento" OR "Adobe Commerce"'
-    notes: "Adobe Commerce/Magento Gold Solution Partner (global, HQ Sweden). TeamTailor — no built-in provider, websearch handoff. Confirmed live PHP Engineer postings at verification time (Pretoria SA office, not EU — kept for recurring scans in case EU roles open)."
+    provider: teamtailor
+    notes: "Adobe Commerce/Magento Gold Solution Partner (global, HQ Sweden). PROMOTED (issue #7): providers/teamtailor.mjs landed from upstream and supports branded hosts via explicit provider: — careers.vaimo.com/jobs.rss verified live (200 OK). Confirmed live PHP Engineer postings at verification time (Pretoria SA office, not EU — kept for recurring scans in case EU roles open)."
     enabled: true
 
   - name: space48 (now Glass Atlas)
     careers_url: https://careers.glassatlas.com/jobs
-    scan_method: websearch
-    scan_query: 'site:careers.glassatlas.com "PHP" OR "Magento" OR "Adobe Commerce" developer'
-    notes: "UK Adobe Commerce/Magento agency, rebranded to Glass Atlas in 2025 (Dark Matter Commerce group). TeamTailor — no built-in provider, websearch handoff. No dev/PHP roles live at verification time (only Paid Social) — kept for recurring scans."
+    provider: teamtailor
+    notes: "UK Adobe Commerce/Magento agency, rebranded to Glass Atlas in 2025 (Dark Matter Commerce group). PROMOTED (issue #7): providers/teamtailor.mjs landed from upstream and supports branded hosts — careers.glassatlas.com/jobs.rss verified live (200 OK). No dev/PHP roles live at verification time (only Paid Social) — kept for recurring scans."
     enabled: true
 
   - name: Fisheye (a Youwe company)
     careers_url: https://careers.youweagency.com/
     scan_method: websearch
     scan_query: 'site:careers.youweagency.com "PHP" OR "Magento" OR "Full-Stack" developer'
-    notes: "UK Magento agency (Shrewsbury), acquired by Youwe in 2022. Confirmed live on Recruitee, but on a BRANDED custom domain (careers.youweagency.com) that providers/recruitee.mjs's strict <slug>.recruitee.com hostname match does not cover (verified by reading the provider source: it has no api: override unlike smartrecruiters/successfactors) — websearch handoff. Current board shows a Senior Full-Stack Headless Developer posting (Groningen/Shrewsbury/Kyiv, hybrid), no Magento-titled role at verification time."
+    notes: "UK Magento agency (Shrewsbury), acquired by Youwe in 2022. Confirmed live on Recruitee, but on a BRANDED custom domain (careers.youweagency.com) that providers/recruitee.mjs's strict <slug>.recruitee.com hostname match does not cover (verified by reading the provider source: it has no api: override unlike smartrecruiters/successfactors) — websearch handoff. Current board shows a Senior Full-Stack Headless Developer posting (Groningen/Shrewsbury/Kyiv, hybrid), no Magento-titled role at verification time. Re-checked (issue #7): recruitee.mjs unchanged, still no branded-domain support; a separate youweconnectit.recruitee.com freelance portal exists but returns 0 listings, not worth using."
     enabled: true
 
   - name: Absolute Web
     careers_url: https://absoluteweb.com/careers/
     scan_method: websearch
     scan_query: 'site:absoluteweb.com "Magento" OR "Adobe Commerce" developer'
-    notes: "Custom site (direct fetch blocked by bot protection at verification time; content confirmed indirectly via search-indexed job pages) — websearch handoff. Confirmed live Magento 2 Backend Developer / Ecommerce Solutions Architect postings, but Miami-based, not EU-remote — kept per the issue's explicit seed list, weigh accordingly at eval."
+    notes: "Custom site (direct fetch blocked by bot protection at verification time; content confirmed indirectly via search-indexed job pages) — websearch handoff. Confirmed live Magento 2 Backend Developer / Ecommerce Solutions Architect postings, but Miami-based, not EU-remote — kept per the issue's explicit seed list, weigh accordingly at eval. Re-checked (issue #7): still 403-blocked directly, no ATS host discoverable via Indeed listing either."
     enabled: true
 
   - name: Vendic
     careers_url: https://vendic.agency/en/jobs
     scan_method: websearch
     scan_query: 'site:vendic.agency "PHP" OR "Laravel" OR "Magento" developer'
-    notes: "Netherlands, Hyvä (Magento 2 theme framework) Platinum Partner. Custom site — websearch handoff. Confirmed live Fullstack Developer posting requiring PHP + Symfony/Laravel."
+    notes: "Netherlands, Hyvä (Magento 2 theme framework) Platinum Partner. Custom site — websearch handoff. Confirmed live Fullstack Developer posting requiring PHP + Symfony/Laravel. Re-checked (issue #7): job links are same-origin relative paths, no external ATS host, no match among the expanded provider set."
     enabled: true
 
   - name: Elgentos
     careers_url: https://werkenbijelgentos.nl/vacatures/
     scan_method: websearch
     scan_query: 'site:werkenbijelgentos.nl "Magento" developer'
-    notes: "Groningen NL, Magento 2 / Hyvä agency. Custom site — websearch handoff. Confirmed live Senior Magento 2 Developer posting."
+    notes: "Groningen NL, Magento 2 / Hyvä agency. Custom site — websearch handoff. Confirmed live Senior Magento 2 Developer posting. Re-checked (issue #7): apply form posts to the same page (CV upload), no third-party ATS."
     enabled: true
 
   - name: Magebit
     careers_url: https://careers.magebit.com/
-    scan_method: websearch
-    scan_query: 'site:careers.magebit.com "Magento" OR "Adobe Commerce" developer'
-    notes: "Latvia, Hyvä-theme specialist. TeamTailor — no built-in provider, websearch handoff. Confirmed live Adobe Commerce/Magento Developer posting, Global/Fully Remote."
+    provider: teamtailor
+    notes: "Latvia, Hyvä-theme specialist. PROMOTED (issue #7): providers/teamtailor.mjs landed from upstream and supports branded hosts — careers.magebit.com/jobs.rss verified live (200 OK). Confirmed live Adobe Commerce/Magento Developer posting, Global/Fully Remote."
     enabled: true
 
   - name: Bold Commerce (NL)
     careers_url: https://www.boldcommerce.nl/vacatures
     scan_method: websearch
     scan_query: 'site:boldcommerce.nl "PHP" OR "Magento" developer'
-    notes: "Amsterdam NL. Custom site — websearch handoff. Confirmed live PHP Developer posting for Magento + Symfony, Medior/Senior. Not affiliated with the Shopify-app company of the same name."
+    notes: "Amsterdam NL. Custom site — websearch handoff. Confirmed live PHP Developer posting for Magento + Symfony, Medior/Senior. Not affiliated with the Shopify-app company of the same name. Re-checked (issue #7): applications go through the site's own contact form, no ATS link anywhere."
     enabled: true
 
   - name: iWeb
     careers_url: https://www.iweb.co.uk/magento-ecommerce-careers/
     scan_method: websearch
     scan_query: 'site:iweb.co.uk "Magento" OR "Commerce Engineer" developer'
-    notes: "UK (Bristol/London/Stafford). No ATS at all (direct application by email) — websearch handoff. Confirmed live Senior Commerce Engineer posting, strong PHP, Bristol/Remote-UK."
+    notes: "UK (Bristol/London/Stafford). No ATS at all (direct application by email) — websearch handoff. Confirmed live Senior Commerce Engineer posting, strong PHP, Bristol/Remote-UK. Re-confirmed (issue #7): page explicitly states \"No application form. No tracking pipeline.\""
     enabled: true
 
   - name: Scandiweb
-    careers_url: https://www.scandiweb.com/careers/
-    scan_method: websearch
-    scan_query: 'site:scandiweb.com "Magento" OR "PHP" developer'
-    notes: "Latvia/global, Magento/Adobe Commerce agency. Custom site — websearch handoff. No open PHP/Magento roles at verification time — kept for recurring scans (real, verified career page)."
+    careers_url: https://scandiweb.pinpointhq.com
+    notes: "Latvia/global, Magento/Adobe Commerce agency. PROMOTED (issue #7): re-check found the real ATS is Pinpoint (career-ops already ships providers/pinpoint.mjs, auto-detects <slug>.pinpointhq.com) — scandiweb.pinpointhq.com/postings.json verified live (200 OK); branded page is www.scandiweb.com/careers/. No open PHP/Magento roles at verification time — kept for recurring scans."
     enabled: true
 
   - name: Snowdog
     careers_url: https://snow.dog/careers/
     scan_method: websearch
     scan_query: 'site:snow.dog "Magento" OR "PHP" developer'
-    notes: "Poland, Magento agency. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page)."
+    notes: "Poland, Magento agency. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page). Re-checked (issue #7): correct URL is snow.dog/career (not /careers/, which 404s); no ATS link found, just a HubSpot CTA tracker."
     enabled: true
 
   - name: Divante
     careers_url: https://divante.com/careers/
-    scan_method: websearch
-    scan_query: 'site:divante.com "Magento" OR "PHP" developer'
-    notes: "Poland, e-commerce/Magento agency. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page)."
-    enabled: true
+    notes: "DISABLED (issue #7 re-check): divante.com/careers is now a dead placeholder page; Divante has been absorbed into Cloudflight, whose own board (career.cloudflight.io -> Workday) is ALREADY tracked separately in portals-cv1.yml. Re-pointing this entry there would just duplicate Cloudflight's listings under a second name, not add real coverage -- disabling instead of silently promoting a duplicate."
+    enabled: false
 
   - name: Spatie
     careers_url: https://spatie.be/jobs
     scan_method: websearch
     scan_query: 'site:spatie.be "Laravel" OR "PHP" developer'
-    notes: "Belgium, Laravel package maintainers / consultancy. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page)."
+    notes: "Belgium, Laravel package maintainers / consultancy. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page). Re-checked (issue #7): correct URL is spatie.be/vacancies (not /jobs); still 0 current vacancies, no ATS references."
     enabled: true
 
   - name: valantic (formerly Netz98)
-    careers_url: https://www.valantic.com/en/career/
+    careers_url: https://www.valantic.com/en/careers/
     scan_method: websearch
     scan_query: 'site:valantic.com "Magento" OR "Adobe Commerce" developer'
-    notes: "Germany. Netz98 (Magento agency) was acquired by valantic; hiring now runs through valantic's own careers site. No Magento-specific title confirmed live at verification time — kept for recurring scans."
+    notes: "Germany. Netz98 (Magento agency) was acquired by valantic; hiring now runs through valantic's own careers site. Re-checked (issue #7) against the expanded provider set (TeamTailor/Recruitee/iCIMS/Jobvite/softgarden/Workable/Greenhouse/Ashby/Lever) -- no match, still custom/proprietary. URL corrected: /en/careers/ (plural), the old /en/career/ 404s."
+    enabled: true
+
+  - name: LaraJobs
+    provider: larajobs
+    notes: "NEW (issue #7): providers/larajobs.mjs just landed from upstream -- board-wide public RSS feed at larajobs.com/feed (Laravel/PHP jobs), zero-token, no per-tenant config needed. Verified live (200 OK). Adds real zero-token coverage for a track that previously had none."
     enabled: true
