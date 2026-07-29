@@ -173,7 +173,7 @@ tracked_companies:
     enabled: true
 
   - name: Snowdog
-    careers_url: https://snow.dog/careers/
+    careers_url: https://snow.dog/career
     scan_method: websearch
     scan_query: 'site:snow.dog "Magento" OR "PHP" developer'
     notes: "Poland, Magento agency. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page). Re-checked (issue #7): correct URL is snow.dog/career (not /careers/, which 404s); no ATS link found, just a HubSpot CTA tracker."
@@ -185,7 +185,7 @@ tracked_companies:
     enabled: false
 
   - name: Spatie
-    careers_url: https://spatie.be/jobs
+    careers_url: https://spatie.be/vacancies
     scan_method: websearch
     scan_query: 'site:spatie.be "Laravel" OR "PHP" developer'
     notes: "Belgium, Laravel package maintainers / consultancy. Custom site — websearch handoff. No open roles at verification time — kept for recurring scans (real, verified career page). Re-checked (issue #7): correct URL is spatie.be/vacancies (not /jobs); still 0 current vacancies, no ATS references."
