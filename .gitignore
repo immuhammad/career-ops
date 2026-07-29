@@ -24,6 +24,10 @@ batch/logs/*
 !batch/logs/.gitkeep
 batch/batch-state.tsv
 batch/batch-input.tsv
+# Output of batch/prune-batch-input.mjs -- same PII class as batch-input.tsv
+# itself (real job URLs/titles/companies from Ahmad's private queue).
+batch/batch-input.kept.tsv
+batch/batch-input.pruned.tsv
 batch/tracker-additions/**/*.tsv
 !batch/tracker-additions/.gitkeep
 jds/*
