@@ -1,8 +1,12 @@
 name: Tests
 
+# fork patch (immuhammad/career-ops): career-ops-custom is this fork's working
+# branch under the vendor-branch model (main = pristine upstream mirror) --
+# PRs target career-ops-custom, so the trigger must cover it too or the test
+# matrix silently never runs (#11). See house rule 12, modes/_custom.md.
 on:
   pull_request:
-    branches: [main]
+    branches: [main, career-ops-custom]
 
 # A force-push supersedes the running matrix; cancel it instead of letting
 # stale legs occupy runners (3 jobs per push at this repo's PR volume).
