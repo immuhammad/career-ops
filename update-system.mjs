@@ -227,6 +227,7 @@ const SYSTEM_PATHS = [
   'batch/batch-prompt.md',
   'batch/batch-runner.sh',
   'batch/aggregate-tokens.mjs',
+  'batch/prune-batch-input.mjs',
   'batch/README.md',
   'utils/token-tracker.mjs',
   'batch-tailor.mjs',
