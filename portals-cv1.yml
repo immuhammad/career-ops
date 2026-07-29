@@ -50,50 +50,7 @@ content_filter:
     - "Backend"
     - "Python"
     - "LLM"
-  # Hard stop 2a (issue #13): explicit German-language REQUIREMENT phrases,
-  # not just German-language JDs -- Austrian Werkstudent/Praktikum postings
-  # are routinely advertised in German by English-speaking engineering teams
-  # (see hard-stop-2b note near location_filter below), so gating on the JD's
-  # own language would gut this track. Gating on an explicit fluency
-  # REQUIREMENT is precise instead: a JD that demands verhandlungssicheres/
-  # fluent/native German is a real signal the workplace itself runs in
-  # German, distinct from a JD merely WRITTEN in German.
-  #
-  # CAVEAT, verified in scan.mjs, not assumed: content_filter only ever sees
-  # `job.description`, and only Lever's list API ships that for free -- every
-  # other provider (Greenhouse/Ashby/SmartRecruiters/SuccessFactors/Workday/
-  # Recruitee/Personio/TeamTailor/Pinpoint/Arbeitnow/Arbeitsagentur/Amazon)
-  # leaves it empty, and an empty description always PASSES this filter. None
-  # of this file's current sources are Lever-based, so this gate has ~zero
-  # practical effect at scan time today -- it is real, forward-looking config
-  # (fires the moment a Lever source is added, or if a websearch-handoff
-  # research pass checks the full JD), not an active filter right now. Do not
-  # assume it is catching anything yet.
-  negative:
-    - "Deutschkenntnisse"
-    - "verhandlungssichere Deutsch"
-    - "verhandlungssicheres Deutsch"
-    - "fließende Deutsch"
-    - "fließendes Deutsch"
-    - "sehr gute Deutschkenntnisse"
-    - "Muttersprache Deutsch"
-    - "Deutsch auf C1"
-    - "Deutsch auf B2"
-    - "German language skills required"
-    - "fluent German"
-    - "native German"
 
-# Hard stop 1 (issue #13): Austria only. Ahmad's Austrian student residence
-# permit does not authorise work in Germany or Switzerland -- a Schengen
-# short-stay (90/180 days) is not a work authorisation, and this is a permit
-# scope limit, not a preference. Do not re-broaden this to DACH: Germany/
-# Switzerland are covered separately by portals-cv2.yml, which targets
-# full-time roles under a different (post-MSc) visa path.
-#
-# Regression case (issue #13): a Bosch "Praktikum AI Integration & Smart
-# Engineering" posting (report 091, Wernau/Neckar, Germany, scored 4.5) was
-# rejected by Ahmad for exactly this reason after the scorer missed it --
-# `block` below now catches any future repeat of it (see the precedence note).
 location_filter:
   allow:
     - "Austria"
@@ -103,16 +60,6 @@ location_filter:
     - "Vienna"
     - "Graz"
     - "Salzburg"
-    - "Villach"
-    - "Pasching"
-    - "Remote"
-  # Explicit DE/CH terms so a posting that also matches "Remote" (e.g.
-  # "Remote (Germany)") is still rejected -- block is checked BEFORE allow.
-  # VERIFIED in scan.mjs's buildLocationFilter (not assumed): the check order
-  # is always_allow > block > allow > "pass if allow is empty" > allow-match.
-  # No always_allow is configured here, so block unconditionally wins over
-  # allow for any of these terms -- this gate is not decorative.
-  block:
     - "Germany"
     - "Deutschland"
     - "München"
@@ -124,14 +71,13 @@ location_filter:
     - "Cologne"
     - "Köln"
     - "Walldorf"
-    - "Switzerland"
+    - "Villach"
+    - "Pasching"
     - "Zurich"
     - "Zürich"
-  # Residual leak (stated, not silently accepted): a posting with NO location
-  # data at all still passes (documented "don't penalize missing data"
-  # posture, unchanged globally per the issue) -- an unlabeled German/Swiss
-  # remote posting could still slip through. Not closed here; flagged for
-  # Ahmad.
+    - "Remote"
+  # Empty for v1 — measure first before adding blocks.
+  block: []
 
 # No salary_filter — deliberate. Student-shaped roles rarely publish comp,
 # and a floor would just drop everything.
@@ -144,6 +90,9 @@ trust_filter:
   enabled: true
 
 # -- Search queries --
+# Note (from the issue, not enforceable at scan time): German-located roles
+# titled "Werkstudent" are handled at eval, not by a title×location cross-gate
+# here.
 search_queries:
   - name: karriere.at — Werkstudent AI/Data/Software
     query: 'site:karriere.at "Werkstudent" AI OR "Machine Learning" OR Data OR Software OR Python OR LLM'
