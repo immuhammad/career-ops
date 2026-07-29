@@ -1,7 +1,11 @@
 name: Dependency Review
+# fork patch (immuhammad/career-ops): career-ops-custom is this fork's working
+# branch under the vendor-branch model (main = pristine upstream mirror) --
+# PRs target career-ops-custom, so the trigger must cover it too. See house
+# rule 12, modes/_custom.md.
 on:
   pull_request:
-    branches: [main]
+    branches: [main, career-ops-custom]
 
 permissions:
   contents: read
