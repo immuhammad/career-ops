@@ -33,7 +33,61 @@ title_filter:
     - "PhD"
     - "Professor"
 
+# Channel C (2026-07-30): remote work for any client country is legal from Linz
+# via Ahmad's Austrian Gewerbe, so "Remote" is always_allow'd and outranks the
+# block list. The block list exists only to reject ON-SITE roles in countries
+# where he would need a work permit he does not have. Whether a specific remote
+# posting is actually open to him ("must reside in X", "W-2 only") is an eval-layer
+# judgement -- see house rule 18. Do not add two-letter country codes to block:
+# substring matching makes them landmines ("AUS" blocks Austria, "CH" blocks
+# Munich, "IN" blocks Linz, "KOR" blocks Korneuburg).
 location_filter:
+  always_allow:
+    - "Remote"
+    - "Anywhere"
+    - "Worldwide"
+    - "Distributed"
+    - "Homeoffice"
+    - "Home office"
+    - "Austria"
+    - "Österreich"
+    - "Vienna"
+    - "Wien"
+    - "Linz"
+    - "Graz"
+    - "Salzburg"
+    # Bare Austrian city strings with no country suffix -- see the same list in
+    # portals-cv3.yml; "Pasching" was silently rejected before these were added.
+    - "Villach"
+    - "Pasching"
+    - "Innsbruck"
+    - "Klagenfurt"
+    - "Wels"
+    - "Steyr"
+    - "Leonding"
+    - "Traun"
+    - "Hagenberg"
+    - "St. Pölten"
+    - "Europe"
+    - "Europa"
+    - "EMEA"
+    - "European Union"
+    - "Germany"
+    - "Deutschland"
+    - "Netherlands"
+    - "Ireland"
+    - "Poland"
+    - "Portugal"
+    - "Spain"
+    - "France"
+    - "Italy"
+    - "Sweden"
+    - "Denmark"
+    - "Finland"
+    - "Czech"
+    - "Romania"
+    - "United Kingdom"
+    - "London"
   allow:
     - "Austria"
     - "Germany"
@@ -66,7 +120,19 @@ location_filter:
     - "Zürich"
     - "Zurich"
     - "United States"
+    - "USA"
     - "India"
+    - "Canada"
+    - "Singapore"
+    - "China"
+    - "Japan"
+    - "Brazil"
+    - "Mexico"
+    - "Australia"
+    - "Philippines"
+    - "Vietnam"
+    - "Thailand"
+    - "Israel"
 
 # Missing salary passes (correct default) — most postings in this track don't
 # publish comp, and a hard drop would lose them.

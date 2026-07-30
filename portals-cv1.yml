@@ -95,7 +95,20 @@ location_filter:
     - "Salzburg"
     - "Villach"
     - "Pasching"
-    - "Remote"
+    # NOTE: bare "Remote" was REMOVED here on 2026-07-30. Matching is substring,
+    # so it matched "Remote-GA" (Georgia, USA) and "USA - Remote" -- which is how
+    # a US "Law Clerk Intern" reached this Austrian working-student queue.
+    # CV-1 does NOT get channel C's remote latitude (see modes/_profile.md):
+    # the whole point of a Werkstudent/Praktikum is the AMS
+    # Beschäftigungsbewilligung and a local foot in the door, and a remote
+    # foreign internship delivers neither -- nor is sponsorship ever offered at
+    # intern level. An Austrian remote role still matches via "Austria" /
+    # "Österreich" / a city above (e.g. "Austria-Remote", "Remote (Wien)");
+    # postings with NO location at all still pass, per the don't-penalise-
+    # missing-data convention.
+    - "Remote (Austria)"
+    - "Remote Österreich"
+    - "Homeoffice"
   # Explicit DE/CH terms so a posting that also matches "Remote" (e.g.
   # "Remote (Germany)") is still rejected -- block is checked BEFORE allow.
   # VERIFIED in scan.mjs's buildLocationFilter (not assumed): the check order
