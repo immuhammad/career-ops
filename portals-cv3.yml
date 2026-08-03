@@ -41,7 +41,145 @@ content_filter:
         - "PHP"
         - "e-commerce"
 
+# Precedence in buildLocationFilter (scan.mjs:230):
+#   always_allow > block > allow > pass-if-allow-empty
+# Each list is matched as a case-insensitive SUBSTRING against the location
+# string AND the URL hint. That substring behaviour is why the bare token
+# "Remote" in `allow` used to pass "USA---Remote-NY", "Remote, India" and
+# "CHN---Remote---Lanzhou" — measured 2026-07-30, and the source of every
+# sub-2.0 US/APAC eval in the 2026-07-29 batch. `allow` stays permissive on
+# purpose; `block` below is what makes it safe.
 location_filter:
+  # always_allow WINS over block. "Remote" is FIRST here on purpose (channel C,
+  # 2026-07-30): Ahmad holds an Austrian Gewerbe and invoices B2B, so remote work
+  # for a client in ANY country is legal from Linz and needs no foreign permit.
+  # The country block below therefore only catches genuinely ON-SITE non-EU roles
+  # -- anything marked remote passes here first and is judged at the eval layer,
+  # which is the only place that can read "US residents only" / "W-2 only" /
+  # "employment via our X entity" (house rule 18). Substring gates cannot.
+  always_allow:
+    - "Remote"
+    - "Anywhere"
+    - "Worldwide"
+    - "Distributed"
+    - "Homeoffice"
+    - "Home office"
+    - "Austria"
+    - "Österreich"
+    - "Vienna"
+    - "Wien"
+    - "Linz"
+    - "Graz"
+    - "Salzburg"
+    # Austrian towns that appear as bare city strings with no country suffix.
+    # Without these they fall through always_allow AND block to the allow list,
+    # which has no entry for them -- "Pasching" was silently rejected this way.
+    - "Villach"
+    - "Pasching"
+    - "Innsbruck"
+    - "Klagenfurt"
+    - "Wels"
+    - "Steyr"
+    - "Leonding"
+    - "Traun"
+    - "Hagenberg"
+    - "St. Pölten"
+    - "Europe"
+    - "Europa"
+    - "EMEA"
+    - "European Union"
+    - "Germany"
+    - "Deutschland"
+    - "Netherlands"
+    - "Nederland"
+    - "Belgium"
+    - "België"
+    - "Ireland"
+    - "Poland"
+    - "Polska"
+    - "Latvia"
+    - "Lithuania"
+    - "Estonia"
+    - "Czech"
+    - "Slovakia"
+    - "Slovenia"
+    - "Hungary"
+    - "Romania"
+    - "Bulgaria"
+    - "Croatia"
+    - "France"
+    - "Spain"
+    - "España"
+    - "Portugal"
+    - "Italy"
+    - "Italia"
+    - "Sweden"
+    - "Denmark"
+    - "Finland"
+    - "Norway"
+    - "United Kingdom"
+    - "London"
+    - "Manchester"
+    - "Bristol"
+    - "Amsterdam"
+    - "Paris"
+    - "Berlin"
+    - "Munich"
+    - "München"
+  # Non-EU. Nothing in the deterministic chain checks work authorisation, so
+  # this list is the only thing keeping US/APAC/LATAM roles out of the queue.
+  #
+  # ONLY unambiguous multi-character tokens. Short codes are landmines under
+  # substring matching — verified against all 215 distinct locations seen so
+  # far (2026-07-30): "AUS" blocks Austria, "KOR" blocks Korneuburg, "ARE"
+  # blocks "Hamburg Area", "US" blocks Austria, "CH" blocks Munich, "IN"
+  # blocks Linz. Do NOT add two-letter country codes here.
+  block:
+    - "USA"
+    - "U.S."
+    - "United States"
+    - "Puerto Rico"
+    - "Canada"
+    - "India"
+    - "China"
+    - "CHN"
+    - "Hong Kong"
+    - "Singapore"
+    - "Malaysia"
+    - "Indonesia"
+    - "Philippines"
+    - "Vietnam"
+    - "Thailand"
+    - "Japan"
+    - "Korea"
+    - "Taiwan"
+    - "Australia"
+    - "New Zealand"
+    - "Brazil"
+    - "Mexico"
+    - "Argentina"
+    - "Colombia"
+    - "Chile"
+    - "Peru"
+    - "Nigeria"
+    - "South Africa"
+    - "Kenya"
+    - "Egypt"
+    - "Morocco"
+    - "Israel"
+    - "Turkey"
+    - "Türkiye"
+    - "Dubai"
+    - "United Arab Emirates"
+    - "Saudi"
+    - "Qatar"
+    - "Pakistan"
+    - "Bangladesh"
+    - "Sri Lanka"
+    - "Nepal"
+    - "APAC"
+    - "LATAM"
+    - "Americas"
   allow:
     - "Remote"
     - "EU"
@@ -60,8 +198,6 @@ location_filter:
     - "Bristol"
     - "Stafford"
     - "Shrewsbury"
-  # Empty for v1 — measure first before adding blocks.
-  block: []
 
 # Ahmad's own stated income floor for this track (senior Magento/Laravel),
 # not a government-regulated threshold like CV-1/CV-2's visa-linked figures

@@ -497,7 +497,35 @@ process_offer() {
   local jd_file
   jd_file="$(mktemp "${TMPDIR:-/tmp}/batch-jd-${id}.XXXXXX")"
 
-  echo "--- Processing offer #$id: $url (report $report_num, attempt $((retries + 1)))"
+  # Populate the JD with a real browser render BEFORE spending a paid eval.
+  # Previously this file was handed to the worker empty, so the worker fell back
+  # to a plain HTTP fetch -- which returns nothing for client-side-rendered ATS
+  # pages (Workday/Ashby). The posting then burned a full evaluation and failed
+  # with "JD unavailable". Fetching first turns that into a free, honest skip.
+  # If the fetcher is absent, degrade to the old empty-file behaviour rather than
+  # failing every offer in the batch.
+  if [[ -f "$BATCH_DIR/fetch-jd.mjs" ]]; then
+    local jd_out jd_rc=0
+    jd_out=$(node "$BATCH_DIR/fetch-jd.mjs" "$url" "$jd_file" 2>&1) || jd_rc=$?
+    local jd_last
+    jd_last=$(printf '%s' "$jd_out" | tail -1 | tr -d '\n' | cut -c1-150)
+    if (( jd_rc != 0 )); then
+      local jd_completed_at
+      jd_completed_at=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+      echo "--- Skipping offer #$id (report $report_num): JD unavailable, no eval spent"
+      echo "    $jd_last"
+      # Recorded as failed, NOT completed: an unevaluable posting must stay
+      # visible and retryable, never be scored from its title or URL slug.
+      update_state "$id" "$url" "failed" "$started_at" "$jd_completed_at" "$report_num" "-" "JD unavailable (browser fetch): $jd_last" "$retries"
+      rm -f "$jd_file"
+      return 0
+    fi
+    echo "--- Processing offer #$id: $url (report $report_num, attempt $((retries + 1)))"
+    echo "    $jd_last"
+  else
+    echo "WARN: $BATCH_DIR/fetch-jd.mjs missing -- worker gets an empty JD file (client-side-rendered postings will fail)." >&2
+    echo "--- Processing offer #$id: $url (report $report_num, attempt $((retries + 1)))"
+  fi
 
   # Build the prompt with placeholders replaced
   local prompt
