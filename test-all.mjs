@@ -5078,6 +5078,80 @@ try {
   fail(`title filter acronym tests crashed: ${e.message}`);
 }
 
+// ── 11c. TITLE FILTER — all-letter keywords use whole-word matching (#20) ──
+console.log('\n11c. Title filter — all-letter whole-word matching (issue #20)');
+try {
+  const { compileKeyword } = await import(pathToFileURL(join(ROOT, 'scan.mjs')).href);
+
+  // "Intern" must not match "Internal"/"International" -- the iCIMS flood (#20).
+  const internMatch = compileKeyword('intern');
+  if (
+    internMatch('acute internal med') === false &&
+    internMatch('qualitative research associate, international development') === false
+  ) {
+    pass('compileKeyword("intern") rejects "internal"/"international" (no mid-word match)');
+  } else {
+    fail('compileKeyword("intern") wrongly matched "internal"/"international"');
+  }
+  if (internMatch('ai engineering intern') === true && internMatch('summer intern, backend') === true) {
+    pass('compileKeyword("intern") still matches standalone "intern"');
+  } else {
+    fail('compileKeyword("intern") should match standalone "intern"');
+  }
+
+  // German gendered-suffix separator forms survive \b naturally.
+  const werkstudentMatch = compileKeyword('werkstudent');
+  if (
+    werkstudentMatch('werkstudent (m/w/d) data science') === true &&
+    werkstudentMatch('werkstudent:in data science') === true
+  ) {
+    pass('compileKeyword("werkstudent") matches separator-suffixed forms ("(m/w/d)", ":in")');
+  } else {
+    fail('compileKeyword("werkstudent") should match separator-suffixed forms');
+  }
+  // Contiguous gendered suffix (no separator) is the documented regression trap:
+  // \b does not fire between two word characters, so "Werkstudentin" is NOT
+  // matched by "werkstudent" alone -- portals-cv1.yml must enumerate the variant.
+  if (werkstudentMatch('werkstudentin gesucht') === false) {
+    pass('compileKeyword("werkstudent") does not match contiguous "werkstudentin" (variant enumeration needed)');
+  } else {
+    fail('compileKeyword("werkstudent") unexpectedly matched "werkstudentin" -- boundary regression');
+  }
+
+  const praktikantMatch = compileKeyword('praktikant');
+  if (praktikantMatch('praktikant*in gesucht') === true && praktikantMatch('praktikantin gesucht') === false) {
+    pass('compileKeyword("praktikant") matches separator form, not contiguous "praktikantin"');
+  } else {
+    fail('compileKeyword("praktikant") separator/contiguous behavior wrong');
+  }
+
+  // Keywords with non-letters (".NET", "L&D") keep permissive substring matching, unchanged.
+  const dotNetMatch = compileKeyword('.net');
+  if (dotNetMatch('senior .net developer') === true) {
+    pass('compileKeyword(".net") keeps substring matching (non-letter keyword)');
+  } else {
+    fail('compileKeyword(".net") substring semantics regressed');
+  }
+  const lAndDMatch = compileKeyword('l&d');
+  if (lAndDMatch('l&d specialist') === true) {
+    pass('compileKeyword("l&d") keeps substring matching (non-letter keyword)');
+  } else {
+    fail('compileKeyword("l&d") substring semantics regressed');
+  }
+
+  // Existing short-acronym (2-3 char) behavior is unchanged by this fix.
+  if (
+    compileKeyword('coo')('chief operating officer (coo)') === true &&
+    compileKeyword('coo')('sales coordinator') === false
+  ) {
+    pass('compileKeyword("coo") 2-3 char acronym boundary behavior unchanged');
+  } else {
+    fail('compileKeyword("coo") acronym behavior regressed');
+  }
+} catch (e) {
+  fail(`all-letter whole-word matching tests crashed: ${e.message}`);
+}
+
 // ── 12. FOLLOW-UP CADENCE LOGIC ─────────────────────────────────
 
 console.log('\n12. Follow-up cadence logic');

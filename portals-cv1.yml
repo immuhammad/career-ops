@@ -21,6 +21,21 @@ title_filter:
     - "Thesis"
     - "Diplomarbeit"
     - "Abschlussarbeit"
+    # German compound-noun variants (#20): whole-word matching means the base
+    # keywords above no longer match inside a longer compound ("Praktikum"
+    # does not match "Pflichtpraktikum" -- no word boundary at the seam).
+    # Measured against every distinct title in data/scan-history.tsv; each
+    # entry below recovers a real, legitimate posting the boundary fix would
+    # otherwise silently drop. Enumerated explicitly rather than loosened via
+    # regex -- deterministic beats clever (per issue #20's own directive).
+    - "Pflichtpraktikum" # mandatory-internship compound (Bosch et al.) -- 100 measured titles
+    - "Jahrespraktikum" # year-long-internship compound
+    - "Hochschulpraktikant" # university-internship compound
+    - "Werkstudentin" # contiguous gendered suffix ("Werkstudent" + "in", no separator)
+    - "Werkstudententätigkeit" # "working-student position" compound
+    - "Praktikantin" # contiguous gendered suffix ("Praktikant" + "in", no separator)
+    - "Praktikumsmöglichkeiten" # "internship opportunities" compound
+    - "Internships" # plural -- "Internship" alone no longer matches the trailing "s"
   negative:
     - "Senior"
     - "Staff"
