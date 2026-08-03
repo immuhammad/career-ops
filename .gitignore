@@ -114,8 +114,5 @@ package-lock.json
 # Planning (local scratchpad)
 plan/
 
-# Local git worktrees (builder isolation, never commit)
-.worktrees/
-
 # Web — runtime cache/history the dashboard writes locally; nothing here is tracked.
 .career-ops-web/
