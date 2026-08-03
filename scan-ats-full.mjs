@@ -37,6 +37,7 @@ import path from 'path';
 import yaml from 'js-yaml';
 
 import { makeHttpCtx, fetchJson } from './providers/_http.mjs';
+import { isResolverFailure, dnsPacingStats } from './providers/_dns-cache.mjs';
 import greenhouse from './providers/greenhouse.mjs';
 import lever from './providers/lever.mjs';
 import ashby from './providers/ashby.mjs';
@@ -60,6 +61,11 @@ const CACHE_TTL_HOURS = 24;
 // so a tampered dataset can at worst name boards that don't exist.
 const DATASET_BASE = 'https://raw.githubusercontent.com/Feashliaa/job-board-aggregator/main/data';
 const CONCURRENCY = 20;
+// A refusing resolver fails every lookup in milliseconds, so a sweep that
+// keeps going just feeds it (#2229). Stop after this many consecutive
+// resolver-level failures — high enough that a handful of unlucky boards
+// can't trip it, low enough to stop within seconds of a real outage.
+const RESOLVER_FAILURE_LIMIT = 50;
 
 // Crash insurance for multi-hour directory sweeps: progress + matches are
 // checkpointed every CHECKPOINT_EVERY companies so --resume can continue a
@@ -380,8 +386,9 @@ export function filterBlacklistedOffers(offers, blacklist, { includeBlacklisted 
 export function passesFilters(job, { titleFilter, locationFilter, contentFilter, titleFilterConfig }) {
   if (!titleFilter(job.title)) return false;
   // job.url is passed so the location filter can fall back to the URL's own
-  // location segment when the provider reports a rolled-up "N Locations" string.
-  if (!locationFilter(job.location, job.url)) return false;
+  // location segment when the provider reports a rolled-up "N Locations" string;
+  // job.title so a title-stated remote role survives a city-only location.
+  if (!locationFilter(job.location, job.url, job.title)) return false;
   if (contentFilter && !contentFilter(job.description, matchedTitleKeywords(job.title, titleFilterConfig))) return false;
   return true;
 }
@@ -503,12 +510,15 @@ export function withTimeout(promise, ms, label) {
   return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
 }
 
-export async function parallelEach(items, limit, fn, onItemDone = null) {
+export async function parallelEach(items, limit, fn, onItemDone = null, shouldStop = null) {
   let next = 0;
   let done = 0;
   const inFlight = new Set();
   async function worker() {
     while (next < items.length) {
+      // Checked before claiming an index, so a stopped run leaves `next` where
+      // the unclaimed work starts and onItemDone's resumeAt stays truthful.
+      if (shouldStop && shouldStop()) return;
       const idx = next++;
       inFlight.add(idx);
       try {
@@ -688,7 +698,7 @@ async function main() {
       // posting stale, --since was silently ignored for the entire source.
       // Enrich first, then let the undated policy decide.
       if (dateClass === 'undated' && provider.enrichDate
-          && titleFilter(job.title) && locationFilter(job.location, job.url)) {
+          && titleFilter(job.title) && locationFilter(job.location, job.url, job.title)) {
         try { await provider.enrichDate(job, ctx); } catch { /* stays undated */ }
         dateClass = classifyPostingDate(job, cutoff);
       }
@@ -696,8 +706,9 @@ async function main() {
       if (dateClass === 'undated' && !opts.includeUndated) { droppedNoDate++; continue; }
       if (!titleFilter(job.title)) continue;
       // job.url is passed so the location filter can fall back to the URL's own
-      // location segment when the provider reports a rolled-up "N Locations" string.
-      if (!locationFilter(job.location, job.url)) continue;
+      // location segment when the provider reports a rolled-up "N Locations" string;
+      // job.title so a title-stated remote role survives a city-only location.
+      if (!locationFilter(job.location, job.url, job.title)) continue;
       if (!contentFilter(job.description, matchedTitleKeywords(job.title, config?.title_filter))) { droppedContent++; continue; }
       const dedupUrl = normalizeUrlForDedup(job.url);
       if (seenUrls.has(dedupUrl)) continue;
@@ -740,6 +751,8 @@ async function main() {
     log(`\n⚙  ${name} — ${entriesAll.length} companies${status !== 'ok' ? ` (dataset: ${status})` : ''}${startAt ? ` — resuming at ${startAt}` : ''}`);
 
     let errors = 0;
+    let consecutiveResolverFailures = 0;
+    let resolverOutage = false;
     const truncated = [];
     await parallelEach(entries, CONCURRENCY, async (entry) => {
       try {
@@ -748,6 +761,7 @@ async function main() {
         // one watchdog, so enrichment latency can't blow past COMPANY_TIMEOUT_MS.
         await withTimeout((async () => {
           const jobs = await source.provider.fetch(entry, ctx);
+          consecutiveResolverFailures = 0;
           if (jobs.workdayTruncated) truncated.push(entry);
           if (jobs.icimsTruncated) {
             cappedBoards++;
@@ -760,6 +774,14 @@ async function main() {
         // Mostly defunct boards in the public dataset — expected noise, so the
         // default stays quiet; --verbose surfaces per-board failures.
         errors++;
+        // A dead board and a dead resolver look identical one at a time; only
+        // the *consecutive* run tells them apart, so any non-resolver outcome
+        // resets the count (#2229).
+        if (isResolverFailure(err)) {
+          if (++consecutiveResolverFailures >= RESOLVER_FAILURE_LIMIT) resolverOutage = true;
+        } else {
+          consecutiveResolverFailures = 0;
+        }
         if (opts.verbose) console.error(`  ✗ ${name}/${entry.name}: ${err.message}`);
       }
     }, ({ done, resumeAt }) => {
@@ -781,11 +803,13 @@ async function main() {
           },
         });
       }
-    });
+    }, () => resolverOutage);
     // Second chance for boards the parallel sweep truncated: retry alone on a
     // quiet line. Re-processing the full board is safe — seenUrls already
     // holds every match from the partial first pass.
-    if (truncated.length) {
+    // Skipped entirely under a resolver outage: retrying boards one by one is
+    // more of exactly the traffic the breaker just stopped.
+    if (truncated.length && !resolverOutage) {
       log(`\n  ↻ retrying ${truncated.length} truncated board(s) sequentially...`);
       for (const entry of truncated) {
         try {
@@ -804,6 +828,15 @@ async function main() {
       }
     }
     totalErrors += errors;
+    if (resolverOutage) {
+      // Deliberately before completedSources/checkpoint: this source did NOT
+      // finish, and marking it done would make --resume skip the rest of it.
+      log(`\n  ⛔ stopped ${name}: ${RESOLVER_FAILURE_LIMIT} consecutive DNS failures.`);
+      log(`     Your resolver is refusing queries — it may be rate-limiting this host.`);
+      log(`     Lower CONCURRENCY, raise the resolver's per-client limit, or set`);
+      log(`     CAREER_OPS_NO_DNS_CACHE=1 only if you know the cache is at fault.`);
+      break;
+    }
     completedSources.add(name);
     if (!opts.dryRun) {
       writeCheckpoint({ ...checkpointBase(), current: null, counters: snapshotCounters() });
@@ -835,6 +868,12 @@ async function main() {
   log(`Companies scanned:  ${totalCompaniesScanned}${capHit ? ` of ${totalCompaniesAvailable} (capped)` : ''}`);
   log(`Unreachable boards: ${totalErrors}`);
   if (cappedBoards) log(`Page-capped boards: ${cappedBoards} (partial coverage — later postings not scanned)`);
+  // A paced sweep is slower on purpose. Say so, or the operator reads the
+  // wall-clock time as a hang (#2229).
+  const pacing = dnsPacingStats();
+  if (pacing.delayed > 0) {
+    log(`DNS pacing:         ${pacing.delayed} lookup${pacing.delayed === 1 ? '' : 's'} delayed, ${Math.round(pacing.waitedMs / 1000)}s total wait (CAREER_OPS_DNS_LOOKUPS_PER_MIN to tune, 0 disables)`);
+  }
   // noDateSkipJobs is a subset of droppedNoDate, not a separate pool: every
   // no-postedOn workday posting counted here also hits the per-job undated
   // filter in the scan loop above and gets dropped there too. Report it as
@@ -921,6 +960,7 @@ async function main() {
       postingsDroppedContent: droppedContent,
       unreachableBoards: totalErrors,
       cappedBoards,
+      dnsPacing: { delayed: pacing.delayed, waitedMs: Math.round(pacing.waitedMs) },
       saved,
       offers: offers.map(o => ({
         company: o.company,
