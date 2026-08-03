@@ -1,5 +1,35 @@
 # Changelog
 
+## [0.6.0](https://github.com/immuhammad/career-ops/compare/web-v0.5.0...web-v0.6.0) (2026-08-03)
+
+
+### Features
+
+* **compliance:** check-table-freshness.mjs — staleness validator for jurisdiction tables (closes [#2036](https://github.com/immuhammad/career-ops/issues/2036)) ([1e83f67](https://github.com/immuhammad/career-ops/commit/1e83f6711e5e1587fc1d220b40eb925b8ef73542))
+* **oferta/apply:** immigration-status requirement overreach — jurisdiction table + posting signal + form warning ([2a681d1](https://github.com/immuhammad/career-ops/commit/2a681d129a5ad2fb1b191072dac74a0a90ea6cb5))
+* **oferta/apply:** jurisdiction-prohibited content signal — table + Block G + apply-form warning ([d8dac75](https://github.com/immuhammad/career-ops/commit/d8dac7589b228051abe79ca3acf4014cf8b9c6fb))
+* **oferta:** agency licensing check — jurisdiction table + registry pointer for agency-mediated postings (closes [#2037](https://github.com/immuhammad/career-ops/issues/2037)) ([10bf77f](https://github.com/immuhammad/career-ops/commit/10bf77fb7c5c2f8eb6ca1a03ba91736f5bf95ca3))
+* **patterns:** per-agency advance-rate analysis from the Via channel ([b6ce551](https://github.com/immuhammad/career-ops/commit/b6ce551e4404f15b20404ecc642886cfe8a2c4c5))
+* **providers:** add VDAB zero-auth provider ([#2084](https://github.com/immuhammad/career-ops/issues/2084)) ([6164384](https://github.com/immuhammad/career-ops/commit/6164384768fa47b7e164e2c36f53e86b2fd620cc))
+* **tracker:** Via channel — end employer vs recruiter/agency intermediary ([#1599](https://github.com/immuhammad/career-ops/issues/1599)) ([b66c0b4](https://github.com/immuhammad/career-ops/commit/b66c0b4a76e9f3738bbddac2ebeb612053e0a9cc))
+* **web:** Follow-up Tracker page with logging, history, and cadence settings ([#1422](https://github.com/immuhammad/career-ops/issues/1422)) ([6554de6](https://github.com/immuhammad/career-ops/commit/6554de6dcd28b95556e95ae220aebc719cc7a2a0))
+
+
+### Bug Fixes
+
+* **dashboard:** localize the hired status label and buffer split stream openers ([#2295](https://github.com/immuhammad/career-ops/issues/2295)) ([8f5d10d](https://github.com/immuhammad/career-ops/commit/8f5d10d6aa97438a4ac3908814456df5a8cf4083))
+* **deps:** update dependency next to v16.2.11 [security] ([#2198](https://github.com/immuhammad/career-ops/issues/2198)) ([b6d1c87](https://github.com/immuhammad/career-ops/commit/b6d1c871d985c278af51d26fa51ef09274c1076b))
+* **tracker:** retrofit remaining positional readers onto the shared header-aware parser ([#1598](https://github.com/immuhammad/career-ops/issues/1598)) ([369a5ff](https://github.com/immuhammad/career-ops/commit/369a5ffcf6623750fcbedbd16be7d3c1c84f1111))
+* **web:** 44px tap-targets at the component level ([#1629](https://github.com/immuhammad/career-ops/issues/1629)) ([388542f](https://github.com/immuhammad/career-ops/commit/388542f3c0a2f82eeac83be8db5b616c213225b9))
+* **web:** add Hired to the states.ts FALLBACK so the degraded path accepts it ([#2282](https://github.com/immuhammad/career-ops/issues/2282)) ([fd112c9](https://github.com/immuhammad/career-ops/commit/fd112c972d23cf0028e0411f36f67b1adf5520db))
+* **web:** contrast tokens — AA across both themes ([#1627](https://github.com/immuhammad/career-ops/issues/1627)) ([ee89bea](https://github.com/immuhammad/career-ops/commit/ee89bea997702d40d1cc01620f727bbb66146b9b))
+* **web:** label-aware pipeline.md reader — posted:/trust:/note: never misread as columns ([6c75d9a](https://github.com/immuhammad/career-ops/commit/6c75d9aa03c919803ffe6939b2ba6f1cf7238db6))
+* **web:** portals copy + analytics semantics ([#1628](https://github.com/immuhammad/career-ops/issues/1628)) ([f8daa19](https://github.com/immuhammad/career-ops/commit/f8daa19d8ea164dd2bbb63834f2d048a34ccaa63))
+* **web:** propagate the Hired terminal-success state across the whole dashboard ([#2250](https://github.com/immuhammad/career-ops/issues/2250)) ([29503dc](https://github.com/immuhammad/career-ops/commit/29503dca07c4f1725675299db48685565f159acb))
+* **web:** render PDFs from the backend instead of the spawned agent ([#2182](https://github.com/immuhammad/career-ops/issues/2182)) ([fef3ff2](https://github.com/immuhammad/career-ops/commit/fef3ff2e228cc14e55df4ced958e4b0aa630ec65))
+* **web:** resolve nested postcss and sharp advisories via overrides ([#2216](https://github.com/immuhammad/career-ops/issues/2216)) ([ec02af8](https://github.com/immuhammad/career-ops/commit/ec02af816abc81b500475f81bf1c2753727a1e79))
+* **web:** ux-audit cleanup — CostBadge global CSS + last sub-44 stragglers ([#1648](https://github.com/immuhammad/career-ops/issues/1648)) ([786b960](https://github.com/immuhammad/career-ops/commit/786b960c2761e88a534886eafdc9d59f82aba56b))
+
 ## [0.5.0](https://github.com/santifer/career-ops/compare/web-v0.4.0...web-v0.5.0) (2026-07-30)
 
 
