@@ -78,13 +78,24 @@ const CONCURRENCY = 10;
 
 // ── Title filter ────────────────────────────────────────────────────
 
-// Compile a lowercased keyword into a matcher. Short all-letter acronyms
-// (2-3 chars: cfo, coo, sdr, bdr, gsi…) match on WORD BOUNDARIES so "COO" no
-// longer matches "Coordinator", "SDR" no longer matches anything mid-word, etc.
+// Compile a lowercased keyword into a matcher. Any single-token all-letter
+// keyword ("cfo", "coo", "intern", "werkstudent"…) matches on WORD BOUNDARIES
+// so "COO" doesn't match "Coordinator" and "Intern" doesn't match
+// "Internal"/"International" (#20 -- the iCIMS flood: substring matching on
+// longer keywords let "Intern" swallow any title containing "internal").
 // Multi-word phrases and keywords containing non-letters (".NET", "SAP ",
 // "L&D") keep fast, permissive substring matching.
+//
+// Word boundaries do NOT fire between two word characters, so a contiguous
+// German gendered suffix ( "Werkstudent" + "in" -> "Werkstudentin" ) is not
+// matched by the base keyword alone -- this is deliberate, not a bug: no
+// substring-based rule can safely guess when a suffix changes meaning, so
+// the fix is to enumerate the real variant explicitly in portals-cvN.yml
+// (see decisions.log #20) rather than get clever with the regex here.
+// Separator forms ("Werkstudent:in", "Praktikant*in", "(m/w/d)") already
+// survive \b naturally, since the separator itself breaks the word.
 export function compileKeyword(kw) {
-  if (/^[a-z]{2,3}$/.test(kw)) {
+  if (/^[a-z]{2,}$/.test(kw)) {
     const re = new RegExp(`\\b${kw}\\b`);
     return (lower) => re.test(lower);
   }
